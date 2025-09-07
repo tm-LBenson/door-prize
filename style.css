@@ -1,0 +1,254 @@
+:root{
+  --door-w:110px;
+  --door-h:180px;
+  --wood1:#7a4b28;
+  --wood2:#9a653d;
+  --wood3:#6b3f22;
+  --frame:#2b1a10;
+  --wall:#e8e4dc;
+  --shadow:rgba(0,0,0,.35);
+  --gold:#ffd466;
+  --green1:#0e9f6e;
+  --green2:#1bbf7a;
+  --accent:#2563eb;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(1200px 600px at 50% 10%, #ffffff 0%, #f7f4ef 60%, #efeae1 100%),
+    var(--wall);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:#222;
+}
+
+main{width:min(900px,92vw)}
+h1,footer,output{text-align:center}
+
+.score-controls{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:8px;
+}
+
+.scoreboard{
+  background:#fff;
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow:0 12px 24px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+  border:1px solid rgba(0,0,0,.06);
+  width:min(520px,100%);
+  margin-inline:auto;
+}
+
+.scoreboard h2{
+  margin:0 0 10px 0;
+  font-size:1.1rem;
+  letter-spacing:.2px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap:8px 18px;
+  align-items:center;
+}
+
+.scoreboard.is-hidden{display:none}
+
+.btn{
+  -webkit-appearance:none;
+  appearance:none;
+  border:1px solid transparent;
+  border-radius:999px;
+  padding:8px 14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .08s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+.btn-ghost{
+  background:#fff;
+  border-color:#e2e8f0;
+}
+#play-again-btn{
+  display: grid;
+  justify-items: center;
+}
+
+.btn-ghost:hover{background:#f8fafc}
+.btn-primary{
+  background:var(--accent);
+  color:#fff;
+}
+.btn-primary:hover{filter:brightness(1.05)}
+
+.doors{
+  display:flex;
+  gap:62px;
+  justify-content:center;
+  padding:22px 6px 6px;
+}
+
+.door{
+  width:var(--door-w);
+  height:var(--door-h);
+  position:relative;
+  border-radius:8px;
+  background:
+    radial-gradient(120px 80px at 60% 40%, rgba(255,255,255,.12), transparent 50%),
+    #0b0b0b;
+  box-shadow:
+    0 14px 24px var(--shadow),
+    inset 0 0 0 3px var(--frame),
+    inset 0 0 0 6px #3a2619;
+  perspective:900px;
+  transform-style:preserve-3d;
+  transition:background .35s ease-out, box-shadow .35s ease-out;
+  cursor:pointer;
+}
+
+.door>p{
+  position:absolute;
+  inset:6px;
+  margin:0;
+  transform-origin:left center;
+  transform:rotateY(0deg) translateZ(1px);
+  transition:transform 900ms cubic-bezier(.19,1,.22,1), filter .3s;
+  border-radius:6px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.06), rgba(0,0,0,.10)) border-box,
+    repeating-linear-gradient(
+      90deg,
+      var(--wood1) 0 16px,
+      var(--wood2) 16px 32px,
+      var(--wood3) 32px 48px,
+      var(--wood2) 48px 64px
+    );
+  border:2px solid rgba(0,0,0,.25);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.05),
+    inset 0 8px 12px rgba(0,0,0,.25),
+    0 8px 18px rgba(0,0,0,.30);
+  color:transparent;
+  user-select:none;
+}
+
+.door>p::before{
+  content:"";
+  position:absolute;
+  inset:14px 18px 96px 18px;
+  border-radius:4px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.20));
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.25),
+    inset 0 10px 18px rgba(0,0,0,.25);
+}
+
+.door>p::after{
+  content:"";
+  position:absolute;
+  right:18px;
+  top:50%;
+  width:16px;
+  height:16px;
+  transform:translateY(-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%, #fff8 0 22%, transparent 23% 100%),
+    radial-gradient(circle at 65% 70%, #0004 0 30%, transparent 31% 100%),
+    linear-gradient(145deg, #d8b76b, #8a692d);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.35),
+    inset 0 1px 2px rgba(255,255,255,.5);
+}
+
+.door:not(.open--empty):not(.open--money):hover>p{transform:rotateY(-8deg) translateZ(1px)}
+.door:focus-visible{outline:3px solid var(--accent); outline-offset:4px; border-radius:10px}
+
+.door.open--empty>p{transform:rotateY(-110deg) translateZ(1px); filter:brightness(.95)}
+.door.open--empty{background:radial-gradient(120px 80px at 65% 40%, rgba(255,255,255,.14), transparent 50%), #0d0f12}
+.door.open--money{background:radial-gradient(120px 80px at 65% 40%, rgba(255,255,255,.18), transparent 52%), linear-gradient(135deg, var(--green1), var(--green2))}
+.door.open--money>p{transform:rotateY(-110deg) translateZ(1px)}
+.door.revealed{pointer-events:none}
+
+.door.open--money::before{
+  content:"💰";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:70px;
+  transform:translateZ(0);
+  animation:prize-pop .5s ease-out .15s both, prize-pulse 1.8s ease-in-out .65s infinite alternate;
+  text-shadow:0 2px 4px rgba(0,0,0,.35),0 0 14px rgba(255,212,102,.55);
+}
+
+.door.open--money::after{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.35) 0 1px, transparent 1.2px) 0 0/14px 14px,
+    radial-gradient(circle at 70% 65%, rgba(255,255,255,.25) 0 1px, transparent 1.2px) 7px 9px/16px 16px,
+    radial-gradient(circle at 40% 80%, rgba(0,0,0,.18) 0 1px, transparent 1.2px) 2px 11px/18px 18px;
+  opacity:.55;
+  pointer-events:none;
+  animation:shimmer 2.6s linear infinite;
+  border-radius:10px;
+}
+
+@keyframes prize-pop{
+  0%{transform:scale(.6);opacity:0}
+  60%{transform:scale(1.08);opacity:1}
+  100%{transform:scale(1)}
+}
+
+@keyframes prize-pulse{
+  0%{text-shadow:0 2px 4px rgba(0,0,0,.35),0 0 10px rgba(255,212,102,.35)}
+  100%{text-shadow:0 2px 4px rgba(0,0,0,.35),0 0 22px rgba(255,212,102,.75)}
+}
+
+@keyframes shimmer{
+  0%{background-position:0 0,7px 9px,2px 11px}
+  100%{background-position:140px 0,147px 9px,142px 11px}
+}
+
+output{
+  display:block;
+  margin-top:14px;
+  min-height:1.6em;
+  font-weight:600;
+  letter-spacing:.2px;
+}
+
+.door.is-selected,
+.door[aria-selected="true"]{
+  box-shadow:
+    0 14px 24px var(--shadow),
+    0 0 0 3px var(--accent),
+    0 0 0 10px color-mix(in oklab, var(--accent) 30%, transparent),
+    inset 0 0 0 3px var(--frame),
+    inset 0 0 0 6px #3a2619;
+  transform:translateY(-2px);
+  transition:box-shadow .25s ease, transform .25s ease;
+  z-index:1;
+  animation:door-float 3s ease-in-out .2s infinite;
+}
+
+.door.is-selected>p,
+.door[aria-selected="true"]>p{filter:brightness(1.06)}
+
+@keyframes door-float{
+  0%,100%{transform:translateY(-2px)}
+  50%{transform:translateY(-5px)}
+}
+
+#play-again{margin-top:10px}

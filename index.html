@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Win a Prize</title>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <h1>Pick a Door - Win a Prize</h1>
+    <main>
+      <div class="score-controls">
+        <button id="toggle-score" class="btn btn-ghost">Show Scoreboard</button>
+      </div>
+      <section id="scoreboard" class="scoreboard is-hidden">
+        <h2>Scoreboard</h2>
+        <div class="stats">
+          <div>Wins on swap</div><div><span id="wins-swap">0</span></div>
+          <div>Wins on stay</div><div><span id="wins-stay">0</span></div>
+          <div>Losses on swap</div><div><span id="losses-swap">0</span></div>
+          <div>Losses on stay</div><div><span id="losses-stay">0</span></div>
+          <div>Games played</div><div><span id="games-total">0</span></div>
+        </div>
+      </section>
+
+      <section class="doors">
+        <button id="1" class="door"><p>&deg;</p></button>
+        <button id="2" class="door"><p>&deg;</p></button>
+        <button id="3" class="door"><p>&deg;</p></button>
+      </section>
+
+      <output></output>
+      <div id="play-again-btn"></div>
+    </main>
+    <footer></footer>
+    <script src="script.js"></script>
+  </body>
+</html>
