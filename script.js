@@ -49,9 +49,8 @@ function renderScore() {
 
 function hostReveal(prizeDoor, pickedDoor) {
   const pool = [1, 2, 3].filter((d) => d !== pickedDoor && d !== prizeDoor);
-  if (pickedDoor === prizeDoor) {
+  if (pickedDoor === prizeDoor)
     return pool[Math.floor(Math.random() * pool.length)];
-  }
   return pool[0];
 }
 
@@ -87,22 +86,16 @@ function setMessage(msg) {
   output.innerHTML = msg;
 }
 
-function removeListeners() {
-  doors.forEach((d) => {
-    d.removeEventListener("click");
-  });
-}
-
 function addPlayAgain() {
   const existing = document.getElementById("play-again");
   if (existing) existing.remove();
   const btn = document.createElement("button");
-  const div = document.getElementById("play-again-btn");
+  const host = document.getElementById("play-again-btn") || output;
   btn.id = "play-again";
   btn.className = "btn btn-primary";
   btn.textContent = "Play Again";
-  btn.addEventListener("click", resetGame);
-  div.appendChild(btn);
+  btn.addEventListener("click", resetGame, { once: true });
+  host.appendChild(btn);
 }
 
 function endRound(win, swapped) {
@@ -132,48 +125,48 @@ function resetGame() {
   setMessage("Pick any door.");
   const btn = document.getElementById("play-again");
   if (btn) btn.remove();
-  doors.forEach((d) => {
-    d.addEventListener("click", () => {
-      if (gameOver) return;
-      const id = parseInt(d.id, 10);
-
-      if (stage === 0) {
-        picked = id;
-        revealed = hostReveal(prize, picked);
-        selectDoor(d);
-        openEmpty(doorByNum(revealed), true);
-        const other = remainingDoor(revealed, picked);
-        setMessage(
-          `Click your original door to stay on ${picked}, or click door ${other} to swap.`,
-        );
-        stage = 1;
-        return;
-      }
-
-      if (stage === 1) {
-        if (id === revealed) return;
-        const swapped = id !== picked;
-        const chosenEl = doorByNum(id);
-        if (id === prize) {
-          openMoney(chosenEl);
-          setMessage("You win!");
-          endRound(true, swapped);
-        } else {
-          openEmpty(chosenEl);
-          doorByNum(prize).classList.add("open--money");
-          setMessage(`You lose. The prize was behind door ${prize}.`);
-          endRound(false, swapped);
-        }
-        return;
-      }
-    });
-  });
 }
+
+function onDoorClick(e) {
+  if (gameOver) return;
+  const d = e.currentTarget;
+  const id = parseInt(d.id, 10);
+
+  if (stage === 0) {
+    picked = id;
+    revealed = hostReveal(prize, picked);
+    selectDoor(d);
+    openEmpty(doorByNum(revealed), true);
+    const other = remainingDoor(revealed, picked);
+    setMessage(
+      `Click your original door to stay on ${picked}, or click door ${other} to swap.`,
+    );
+    stage = 1;
+    return;
+  }
+
+  if (stage === 1) {
+    if (id === revealed) return;
+    const swapped = id !== picked;
+    if (id === prize) {
+      openMoney(d);
+      setMessage("You win!");
+      endRound(true, swapped);
+    } else {
+      openEmpty(d);
+      doorByNum(prize).classList.add("open--money");
+      setMessage(`You lose. The prize was behind door ${prize}.`);
+      endRound(false, swapped);
+    }
+  }
+}
+
+doors.forEach((d) => d.addEventListener("click", onDoorClick));
 
 toggleScoreBtn.addEventListener("click", () => {
   const hidden = scoreboard.classList.toggle("is-hidden");
   toggleScoreBtn.textContent = hidden ? "Show Scoreboard" : "Hide Scoreboard";
 });
-resetGame();
+
 loadStats();
-setMessage("Pick any door.");
+resetGame();
